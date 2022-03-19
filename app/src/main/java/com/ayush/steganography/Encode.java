@@ -169,9 +169,16 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
     private void saveToInternalStorage(Bitmap bitmapImage) {
         OutputStream fOut;
-        File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS), "Encoded" + ".PNG"); // the File to save ,
+
+        File filepath = Environment.getExternalStorageDirectory();
+
+        File dir = new File(filepath.getAbsolutePath()
+                + "/StegMTUCI/");
+        dir.mkdirs();
+        File file = new File(dir, "HIDDEN.PNG" );
+
         try {
+//            MediaStore.Images.Media.insertImage(getContentResolver(), bitmapImage, "HIDDEN" , "description");
             fOut = new FileOutputStream(file);
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fOut); // saving the Bitmap to a file
             fOut.flush(); // Not really required
@@ -182,9 +189,11 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
                     save.dismiss();
                 }
             });
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

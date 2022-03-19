@@ -114,8 +114,10 @@ public class ImageSteganography {
 
         StringBuilder result = new StringBuilder(secret_key);
 
-        if (secret_key.length() <= 16) {
-            for (int i = 0; i < (16 - secret_key.length()); i++) {
+
+
+        if (secret_key.toString().getBytes().length <= 16) {
+            for (int i = 0; i < (16 - secret_key.toString().getBytes().length); i++) {
                 result.append("#");
             }
         } else {
