@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextDecodingCallback;
@@ -19,15 +18,13 @@ import java.io.IOException;
 
 public class Decode extends AppCompatActivity implements TextDecodingCallback {
 
-    private static final int SELECT_PICTURE = 100;
-    private static final String TAG = "Decode Class";
-    //Initializing the UI components
+    private static final int INTENT_FOR_CHOOSING_PICTURE = 100;
+    // Создаём переменные для элементов интерфейса
     private TextView textView;
     private ImageView imageView;
     private EditText message;
     private EditText secret_key;
     private Uri filepath;
-    //Bitmap
     private Bitmap original_image;
 
     @Override
@@ -35,7 +32,7 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decode);
 
-        //Instantiation of UI components
+        // Установка ссылок на объекты в интерфейсе
         textView = findViewById(R.id.whether_decoded);
 
         imageView = findViewById(R.id.imageview);
@@ -46,7 +43,6 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
         Button choose_image_button = findViewById(R.id.choose_image_button);
         Button decode_button = findViewById(R.id.decode_button);
 
-        //Choose Image Button
         choose_image_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,7 +76,7 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), INTENT_FOR_CHOOSING_PICTURE);
     }
 
     @Override
@@ -88,7 +84,7 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
         super.onActivityResult(requestCode, resultCode, data);
 
         //Image set to imageView
-        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == INTENT_FOR_CHOOSING_PICTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             filepath = data.getData();
             try {
@@ -96,7 +92,7 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
 
                 imageView.setImageBitmap(original_image);
             } catch (IOException e) {
-                Log.d(TAG, "Error : " + e);
+                // обработка ошибки
             }
         }
 

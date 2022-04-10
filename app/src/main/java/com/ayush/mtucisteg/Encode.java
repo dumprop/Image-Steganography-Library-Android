@@ -12,11 +12,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
+import android.support.v4.app.*;
+import android.support.v4.content.*;
+import android.support.v7.app.*;
 
 import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextEncodingCallback;
 import com.ayush.mtucisteglib.Text.ImageSteganography;
@@ -28,18 +26,19 @@ import com.ayush.mtucisteglib.Text.TextEncoding;
 public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
     private static final int SELECT_PICTURE = 100;
-    private static final String TAG = "Encode Class";
-    //Created variables for UI
+
     private TextView whether_encoded;
     private ImageView imageView;
     private EditText message;
     private EditText secret_key;
-    //Objects needed for encoding
+
+
     private TextEncoding textEncoding;
     private ImageSteganography imageSteganography;
     private ProgressDialog save;
     private Uri filepath;
-    //Bitmaps
+
+
     private Bitmap original_image;
     private Bitmap encoded_image;
 
@@ -63,55 +62,31 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
         checkAndRequestPermissions();
 
+        choose_image_button.setOnClickListener(view -> ImageChooser());
 
-        //Choose image button
-        choose_image_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ImageChooser();
-            }
-        });
-
-        //Encode Button
-        encode_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                whether_encoded.setText("");
-                if (filepath != null) {
-                    if (message.getText() != null) {
-
-                        //ImageSteganography Object instantiation
-                        imageSteganography = new ImageSteganography(message.getText().toString(),
-                                secret_key.getText().toString(),
-                                original_image);
-                        //TextEncoding object Instantiation
-                        textEncoding = new TextEncoding(Encode.this, Encode.this);
-                        //Executing the encoding
-                        textEncoding.execute(imageSteganography);
-                    }
+        encode_button.setOnClickListener(view -> {
+            whether_encoded.setText("");
+            if (filepath != null) {
+                if (message.getText() != null) {
+                    imageSteganography = new ImageSteganography(message.getText().toString(),
+                            secret_key.getText().toString(),
+                            original_image);
+                    textEncoding = new TextEncoding(Encode.this, Encode.this);
+                    textEncoding.execute(imageSteganography);
                 }
             }
         });
 
-        //Save image button
-        save_image_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final Bitmap imgToSave = encoded_image;
-                Thread PerformEncoding = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        saveToInternalStorage(imgToSave);
-                    }
-                });
-                save = new ProgressDialog(Encode.this);
-                save.setMessage("Saving, Please Wait...");
-                save.setTitle("Saving Image");
-                save.setIndeterminate(false);
-                save.setCancelable(false);
-                save.show();
-                PerformEncoding.start();
-            }
+        save_image_button.setOnClickListener(view -> {
+            final Bitmap imgToSave = encoded_image;
+            Thread PerformEncoding = new Thread(() -> saveToInternalStorage(imgToSave));
+            save = new ProgressDialog(Encode.this);
+            save.setMessage("Сохраняю, подождите...");
+            save.setTitle("Сохранение изображения");
+            save.setIndeterminate(false);
+            save.setCancelable(false);
+            save.show();
+            PerformEncoding.start();
         });
 
     }
@@ -120,7 +95,7 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        startActivityForResult(Intent.createChooser(intent, "Выбери изображение"), SELECT_PICTURE);
     }
 
     @Override
@@ -136,17 +111,15 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
                 imageView.setImageBitmap(original_image);
             } catch (IOException e) {
-                Log.d(TAG, "Error : " + e);
+                //обработка ошибок
             }
         }
 
     }
 
-    // Override method of TextEncodingCallback
-
     @Override
     public void onStartTextEncoding() {
-        //Whatever you want to do at the start of text encoding
+        // обработка текст на начале
     }
 
     @Override
@@ -172,21 +145,10 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
         File file = new File(dir, "HIDDEN.PNG" );
 
         try {
-//            MediaStore.Images.Media.insertImage(getContentResolver(), bitmapImage, "HIDDEN" , "description");
             fOut = new FileOutputStream(file);
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fOut); // saving the Bitmap to a file
-            fOut.flush(); // Not really required
-            fOut.close(); // do not forget to close the stream
-            whether_encoded.post(new Runnable() {
-                @Override
-                public void run() {
-                    save.dismiss();
-                }
-            });
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            fOut.close();
+            whether_encoded.post(() -> save.dismiss());
         } catch (Exception e) {
             e.printStackTrace();
         }
