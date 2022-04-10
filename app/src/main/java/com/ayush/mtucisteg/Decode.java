@@ -8,13 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextDecodingCallback;
 import com.ayush.mtucisteglib.Text.ImageSteganography;
 import com.ayush.mtucisteglib.Text.TextDecoding;
-
-import java.io.IOException;
 
 public class Decode extends AppCompatActivity implements TextDecodingCallback {
 
@@ -32,37 +29,24 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decode);
 
-        // Установка ссылок на объекты в интерфейсе
+        Button choose_image_button = findViewById(R.id.choose_image_button);
         textView = findViewById(R.id.whether_decoded);
-
+        Button decode_button = findViewById(R.id.decode_button);
         imageView = findViewById(R.id.imageview);
 
         message = findViewById(R.id.message);
         secret_key = findViewById(R.id.secret_key);
 
-        Button choose_image_button = findViewById(R.id.choose_image_button);
-        Button decode_button = findViewById(R.id.decode_button);
+        choose_image_button.setOnClickListener(view -> ImageChooser());
 
-        choose_image_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ImageChooser();
+        decode_button.setOnClickListener(view -> {
+            if (null != filepath) {
+                ImageSteganography imageSteganography = new ImageSteganography(secret_key.getText().toString(),
+                        original_image);
+                TextDecoding textDecoding = new TextDecoding(Decode.this, Decode.this);
+                textDecoding.execute(imageSteganography);
             }
         });
-
-        decode_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (filepath != null) {
-                    ImageSteganography imageSteganography = new ImageSteganography(secret_key.getText().toString(),
-                            original_image);
-                    TextDecoding textDecoding = new TextDecoding(Decode.this, Decode.this);
-                    textDecoding.execute(imageSteganography);
-                }
-            }
-        });
-
-
     }
 
     private void ImageChooser() {
@@ -100,7 +84,7 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
             else {
                 if (!result.isSecretKeyWrong()) {
                     textView.setText("Получен текст из изображения");
-                    message.setText("" + result.getMessage());
+                    message.setText(result.getMessage());
                 } else {
                     textView.setText("Неправильный ключ");
                 }
