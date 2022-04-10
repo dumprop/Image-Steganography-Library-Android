@@ -1,8 +1,9 @@
 package com.ayush.mtucisteg;
 
 import android.widget.*;
-
+import java.util.*;
 import android.Manifest;
+import java.io.*;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,12 +22,8 @@ import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextEncodingCallback;
 import com.ayush.mtucisteglib.Text.ImageSteganography;
 import com.ayush.mtucisteglib.Text.TextEncoding;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
+
+
 
 public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
