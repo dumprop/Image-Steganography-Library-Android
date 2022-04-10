@@ -50,20 +50,13 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
             }
         });
 
-        //Decode Button
         decode_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (filepath != null) {
-
-                    //Making the ImageSteganography object
                     ImageSteganography imageSteganography = new ImageSteganography(secret_key.getText().toString(),
                             original_image);
-
-                    //Making the TextDecoding object
                     TextDecoding textDecoding = new TextDecoding(Decode.this, Decode.this);
-
-                    //Execute Task
                     textDecoding.execute(imageSteganography);
                 }
             }
@@ -76,22 +69,18 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), INTENT_FOR_CHOOSING_PICTURE);
+        startActivityForResult(Intent.createChooser(intent, "Выбери изображение"), INTENT_FOR_CHOOSING_PICTURE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        //Image set to imageView
         if (requestCode == INTENT_FOR_CHOOSING_PICTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
             filepath = data.getData();
             try {
                 original_image = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-
                 imageView.setImageBitmap(original_image);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 // обработка ошибки
             }
         }
@@ -100,29 +89,24 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
 
     @Override
     public void onStartTextEncoding() {
-        //Whatever you want to do by the start of textDecoding
+        // обработка до шифрования текста
     }
 
     @Override
     public void onCompleteTextEncoding(ImageSteganography result) {
-
-        //By the end of textDecoding
-
         if (result != null) {
             if (!result.isDecoded())
-                textView.setText("No message found");
+                textView.setText("Не удалось найти текст в изображении");
             else {
                 if (!result.isSecretKeyWrong()) {
-                    textView.setText("Decoded");
+                    textView.setText("Получен текст из изображения");
                     message.setText("" + result.getMessage());
                 } else {
-                    textView.setText("Wrong secret key");
+                    textView.setText("Неправильный ключ");
                 }
             }
         } else {
-            textView.setText("Select Image First");
+            textView.setText("Сначала нужно выбрать изображение");
         }
-
-
     }
 }

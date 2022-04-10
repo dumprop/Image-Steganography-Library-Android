@@ -47,18 +47,13 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encode);
 
-        //initialized the UI components
-
-        whether_encoded = findViewById(R.id.whether_encoded);
-
-        imageView = findViewById(R.id.imageview);
-
-        message = findViewById(R.id.message);
-        secret_key = findViewById(R.id.secret_key);
-
-        Button choose_image_button = findViewById(R.id.choose_image_button);
-        Button encode_button = findViewById(R.id.encode_button);
         Button save_image_button = findViewById(R.id.save_image_button);
+        secret_key = findViewById(R.id.secret_key);
+        imageView = findViewById(R.id.imageview);
+        Button encode_button = findViewById(R.id.encode_button);
+        whether_encoded = findViewById(R.id.whether_encoded);
+        message = findViewById(R.id.message);
+        Button choose_image_button = findViewById(R.id.choose_image_button);
 
         checkAndRequestPermissions();
 
@@ -101,20 +96,15 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        //Image set to imageView
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
             filepath = data.getData();
             try {
                 original_image = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-
                 imageView.setImageBitmap(original_image);
             } catch (IOException e) {
                 //обработка ошибок
             }
         }
-
     }
 
     @Override
@@ -124,9 +114,6 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
     @Override
     public void onCompleteTextEncoding(ImageSteganography result) {
-
-        //By the end of textEncoding
-
         if (result != null && result.isEncoded()) {
             encoded_image = result.getEncoded_image();
             whether_encoded.setText("Encoded");
@@ -150,7 +137,6 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
             fOut.close();
             whether_encoded.post(() -> save.dismiss());
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -159,15 +145,16 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int ReadPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         List<String> listPermissionsNeeded = new ArrayList<>();
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[0]), 1);
+        }
         if (ReadPermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
         if (permissionWriteStorage != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[0]), 1);
-        }
+
     }
 
 
