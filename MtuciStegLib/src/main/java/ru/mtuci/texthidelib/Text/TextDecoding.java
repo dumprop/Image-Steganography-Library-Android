@@ -1,4 +1,4 @@
-package com.ayush.mtucisteglib.Text;
+package ru.mtuci.texthidelib.Text;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextDecodingCallback;
-import com.ayush.mtucisteglib.Utils.Utility;
+import ru.mtuci.texthidelib.Text.AsyncTaskCallback.TextDecodingCallback;
+import ru.mtuci.texthidelib.Utils.Utility;
 
 import java.util.List;
 
@@ -15,12 +15,12 @@ import java.util.List;
  * In this class all those method in EncodeDecode class are used to decode secret message in image.
  * All the tasks will run in background.
  */
-public class TextDecoding extends AsyncTask<ImageSteganography, Void, ImageSteganography> {
+public class TextDecoding extends AsyncTask<MtuciHideTextInImage, Void, MtuciHideTextInImage> {
 
     //Tag for Log
     private final static String TAG = TextDecoding.class.getName();
 
-    private final ImageSteganography result;
+    private final MtuciHideTextInImage result;
     //Callback interface for AsyncTask
     private final TextDecodingCallback textDecodingCallback;
     private ProgressDialog progressDialog;
@@ -30,7 +30,7 @@ public class TextDecoding extends AsyncTask<ImageSteganography, Void, ImageStega
         this.progressDialog = new ProgressDialog(activity);
         this.textDecodingCallback = textDecodingCallback;
         //making result object
-        this.result = new ImageSteganography();
+        this.result = new MtuciHideTextInImage();
     }
 
     //setting progress dialog if wanted
@@ -55,8 +55,8 @@ public class TextDecoding extends AsyncTask<ImageSteganography, Void, ImageStega
     }
 
     @Override
-    protected void onPostExecute(ImageSteganography imageSteganography) {
-        super.onPostExecute(imageSteganography);
+    protected void onPostExecute(MtuciHideTextInImage mtuciHideTextInImage) {
+        super.onPostExecute(mtuciHideTextInImage);
 
         //dismiss progress dialog
         if (progressDialog != null)
@@ -67,15 +67,15 @@ public class TextDecoding extends AsyncTask<ImageSteganography, Void, ImageStega
     }
 
     @Override
-    protected ImageSteganography doInBackground(ImageSteganography... imageSteganographies) {
+    protected MtuciHideTextInImage doInBackground(MtuciHideTextInImage... imageSteganographies) {
 
         //If it is not already decoded
         if (imageSteganographies.length > 0) {
 
-            ImageSteganography imageSteganography = imageSteganographies[0];
+            MtuciHideTextInImage mtuciHideTextInImage = imageSteganographies[0];
 
             //getting bitmap image from file
-            Bitmap bitmap = imageSteganography.getImage();
+            Bitmap bitmap = mtuciHideTextInImage.getImage();
 
             //return null if bitmap is null
 //            if (bitmap == null)
@@ -95,7 +95,7 @@ public class TextDecoding extends AsyncTask<ImageSteganography, Void, ImageStega
             }
 
             //decrypting the encoded message
-            String decrypted_message = ImageSteganography.decryptMessage(decoded_message, imageSteganography.getSecret_key());
+            String decrypted_message = MtuciHideTextInImage.decryptMessage(decoded_message, mtuciHideTextInImage.getSecret_key());
             Log.d(TAG, "Decrypted message : " + decrypted_message);
 
             //If decrypted_message is null it means that the secret key is wrong otherwise secret key is right.

@@ -16,9 +16,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextDecodingCallback;
-import com.ayush.mtucisteglib.Text.ImageSteganography;
-import com.ayush.mtucisteglib.Text.TextDecoding;
+import ru.mtuci.texthidelib.Text.AsyncTaskCallback.TextDecodingCallback;
+import ru.mtuci.texthidelib.Text.MtuciHideTextInImage;
+import ru.mtuci.texthidelib.Text.TextDecoding;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,10 +66,10 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
 
         decode_button.setOnClickListener(view -> {
             if (null != filepath) {
-                ImageSteganography imageSteganography = new ImageSteganography(secret_key.getText().toString(),
+                MtuciHideTextInImage mtuciHideTextInImage = new MtuciHideTextInImage(secret_key.getText().toString(),
                         original_image);
                 TextDecoding textDecoding = new TextDecoding(Decode.this, Decode.this);
-                textDecoding.execute(imageSteganography);
+                textDecoding.execute(mtuciHideTextInImage);
             }
         });
     }
@@ -86,7 +86,7 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
     }
 
     @Override
-    public void onCompleteTextEncoding(ImageSteganography result) {
+    public void onCompleteTextEncoding(MtuciHideTextInImage result) {
         if (result != null) {
             if (!result.isDecoded())
                 textView.setText("Не удалось найти текст в изображении");

@@ -1,4 +1,4 @@
-package com.ayush.mtucisteglib.Text;
+package ru.mtuci.texthidelib.Text;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextEncodingCallback;
-import com.ayush.mtucisteglib.Utils.Utility;
+import ru.mtuci.texthidelib.Text.AsyncTaskCallback.TextEncodingCallback;
+import ru.mtuci.texthidelib.Utils.Utility;
 
 import java.util.List;
 
@@ -15,12 +15,12 @@ import java.util.List;
  * In this class all those method in EncodeDecode class are used to encode secret message in image.
  * All the tasks will run in background.
  */
-public class TextEncoding extends AsyncTask<ImageSteganography, Integer, ImageSteganography> {
+public class TextEncoding extends AsyncTask<MtuciHideTextInImage, Integer, MtuciHideTextInImage> {
 
     //Tag for Log
     private static final String TAG = TextEncoding.class.getName();
 
-    private final ImageSteganography result;
+    private final MtuciHideTextInImage result;
     //Callback interface for AsyncTask
     private final TextEncodingCallback callbackInterface;
     private int maximumProgress;
@@ -31,7 +31,7 @@ public class TextEncoding extends AsyncTask<ImageSteganography, Integer, ImageSt
         this.progressDialog = new ProgressDialog(activity);
         this.callbackInterface = callbackInterface;
         //making result object
-        this.result = new ImageSteganography();
+        this.result = new MtuciHideTextInImage();
     }
 
     //pre execution of method
@@ -50,7 +50,7 @@ public class TextEncoding extends AsyncTask<ImageSteganography, Integer, ImageSt
     }
 
     @Override
-    protected void onPostExecute(ImageSteganography textStegnography) {
+    protected void onPostExecute(MtuciHideTextInImage textStegnography) {
         super.onPostExecute(textStegnography);
 
         //dismiss progress dialog
@@ -73,13 +73,13 @@ public class TextEncoding extends AsyncTask<ImageSteganography, Integer, ImageSt
     }
 
     @Override
-    protected ImageSteganography doInBackground(ImageSteganography... imageSteganographies) {
+    protected MtuciHideTextInImage doInBackground(MtuciHideTextInImage... imageSteganographies) {
 
         maximumProgress = 0;
 
         if (imageSteganographies.length > 0) {
 
-            ImageSteganography textStegnography = imageSteganographies[0];
+            MtuciHideTextInImage textStegnography = imageSteganographies[0];
 
             //getting image bitmap
             Bitmap bitmap = textStegnography.getImage();

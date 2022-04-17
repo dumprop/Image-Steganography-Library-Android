@@ -1,4 +1,4 @@
-package com.ayush.mtucisteglib.Utils;
+package ru.mtuci.texthidelib.Utils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

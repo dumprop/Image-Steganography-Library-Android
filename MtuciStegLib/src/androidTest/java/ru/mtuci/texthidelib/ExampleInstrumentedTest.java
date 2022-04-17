@@ -1,4 +1,4 @@
-package com.ayush.mtucisteglib;
+package ru.mtuci.texthidelib;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

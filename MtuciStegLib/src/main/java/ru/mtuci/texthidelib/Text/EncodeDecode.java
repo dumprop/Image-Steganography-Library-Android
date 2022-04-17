@@ -1,10 +1,10 @@
-package com.ayush.mtucisteglib.Text;
+package ru.mtuci.texthidelib.Text;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 
-import com.ayush.mtucisteglib.Utils.Utility;
+import ru.mtuci.texthidelib.Utils.Utility;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;

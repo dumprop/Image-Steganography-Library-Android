@@ -25,9 +25,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextEncodingCallback;
-import com.ayush.mtucisteglib.Text.ImageSteganography;
-import com.ayush.mtucisteglib.Text.TextEncoding;
+import ru.mtuci.texthidelib.Text.AsyncTaskCallback.TextEncodingCallback;
+import ru.mtuci.texthidelib.Text.MtuciHideTextInImage;
+import ru.mtuci.texthidelib.Text.TextEncoding;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,7 +48,7 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
 
     private TextEncoding textEncoding;
-    private ImageSteganography imageSteganography;
+    private MtuciHideTextInImage mtuciHideTextInImage;
     private ProgressDialog save;
     private Uri filepath;
 
@@ -92,11 +92,11 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
             textView.setText("");
             if (filepath != null) {
                 if (message.getText() != null) {
-                    imageSteganography = new ImageSteganography(message.getText().toString(),
+                    mtuciHideTextInImage = new MtuciHideTextInImage(message.getText().toString(),
                             secret_key.getText().toString(),
                             original_image);
                     textEncoding = new TextEncoding(Encode.this, Encode.this);
-                    textEncoding.execute(imageSteganography);
+                    textEncoding.execute(mtuciHideTextInImage);
                 }
             }
         });
@@ -128,7 +128,7 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
     }
 
     @Override
-    public void onCompleteTextEncoding(ImageSteganography result) {
+    public void onCompleteTextEncoding(MtuciHideTextInImage result) {
         if (result != null && result.isEncoded()) {
             encoded_image = result.getEncoded_image();
             textView.setText(R.string.text_is_hidden_in_image);

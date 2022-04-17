@@ -1425,7 +1425,7 @@
 											"top": 418,
 											"width": 301.11376953125,
 											"height": 13,
-											"text": "-imageSteganography, result: ImageSteganography",
+											"text": "-mtuciHideTextInImage, result: ImageSteganography",
 											"horizontalAlignment": 0
 										},
 										{
@@ -8483,7 +8483,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFnjrFoGRBhs7I="
 							},
-							"name": "imageSteganography, result",
+							"name": "mtuciHideTextInImage, result",
 							"visibility": "private",
 							"type": {
 								"$ref": "AAAAAAFnjpeueQ5Ig5Y="

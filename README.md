@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements TextEncodingCallb
 - Firstly, instantiate the `ImageSteganography` object and pass the values `Message	`, `Secret Key` and `Image Bitmap` to the constructor.
 
   ```java
-  ImageSteganography imageSteganography = new ImageSteganography(message, 
+  ImageSteganography mtuciHideTextInImage = new ImageSteganography(message, 
                                           secret_key, 
                                           original_image);
   ```
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements TextEncodingCallb
 - Finally, execute our `encoding` task.
 
   ```java
-  textEncoding.execute(imageSteganography);
+  textEncoding.execute(mtuciHideTextInImage);
   ```
 **Note** : By default a `ProgressDialog` will appear in the process of text encoding.
 
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements TextDecodingCallb
 - Firstly, instantiate the `ImageSteganography` object and pass the values `Secret Key` and `Image Bitmap` to the constructor.
 
   ```java
-  ImageSteganography imageSteganography = new ImageSteganography(secret_key,
+  ImageSteganography mtuciHideTextInImage = new ImageSteganography(secret_key,
                                           original_image);
   ```
 
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements TextDecodingCallb
 - Finally, execute our `decoding` task.
 
   ```java
-  textDecoding.execute(imageSteganography);
+  textDecoding.execute(mtuciHideTextInImage);
   ```
   **Note** : By default a `ProgressDialog` will appear in the process of text decoding.
 

@@ -1,18 +1,18 @@
-package com.ayush.mtucisteglib.Text;
+package ru.mtuci.texthidelib.Text;
 
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.ayush.mtucisteglib.Utils.Crypto;
-import com.ayush.mtucisteglib.Utils.Utility;
+import ru.mtuci.texthidelib.Utils.Crypto;
+import ru.mtuci.texthidelib.Utils.Utility;
 
 /**
  * This main class of the text steganography
  */
-public class ImageSteganography {
+public class MtuciHideTextInImage {
 
     //Tag for Log
-    private static final String TAG = ImageSteganography.class.getName();
+    private static final String TAG = MtuciHideTextInImage.class.getName();
 
     private String message;
     private String secret_key;
@@ -24,7 +24,7 @@ public class ImageSteganography {
     private Boolean decoded;
     private Boolean secretKeyWrong;
 
-    public ImageSteganography() {
+    public MtuciHideTextInImage() {
         this.encoded = false;
         this.decoded = false;
         this.secretKeyWrong = true;
@@ -36,7 +36,7 @@ public class ImageSteganography {
         this.encrypted_zip = new byte[0];
     }
 
-    public ImageSteganography(String message, String secret_key, Bitmap image) {
+    public MtuciHideTextInImage(String message, String secret_key, Bitmap image) {
 
         this.message = message;
         this.secret_key = convertKeyTo128bit(secret_key);
@@ -58,7 +58,7 @@ public class ImageSteganography {
 
     }
 
-    public ImageSteganography(String secret_key, Bitmap image) {
+    public MtuciHideTextInImage(String secret_key, Bitmap image) {
         this.secret_key = convertKeyTo128bit(secret_key);
         this.image = image;
 

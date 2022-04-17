@@ -1,4 +1,4 @@
-package com.ayush.mtucisteglib.Utils;
+package ru.mtuci.texthidelib.Utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
