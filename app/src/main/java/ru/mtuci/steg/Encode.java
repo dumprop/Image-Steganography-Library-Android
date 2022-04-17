@@ -123,11 +123,6 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
     }
 
     @Override
-    public void onStartTextEncoding() {
-        // обработка текст на начале (особенность TextEncodingCallback)
-    }
-
-    @Override
     public void onCompleteTextEncoding(MtuciHideTextInImage result) {
         if (result != null && result.isEncoded()) {
             encoded_image = result.getEncoded_image();

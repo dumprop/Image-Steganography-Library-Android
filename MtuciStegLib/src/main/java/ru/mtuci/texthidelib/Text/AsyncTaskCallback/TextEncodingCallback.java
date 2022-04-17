@@ -8,8 +8,6 @@ import ru.mtuci.texthidelib.Text.MtuciHideTextInImage;
 
 public interface TextEncodingCallback {
 
-    void onStartTextEncoding();
-
     void onCompleteTextEncoding(MtuciHideTextInImage result);
 
 }

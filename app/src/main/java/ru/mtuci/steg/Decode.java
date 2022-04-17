@@ -81,11 +81,6 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
     }
 
     @Override
-    public void onStartTextEncoding() {
-        // обработка до шифрования текста (особенность TextEncodingCallback)
-    }
-
-    @Override
     public void onCompleteTextEncoding(MtuciHideTextInImage result) {
         if (result != null) {
             if (!result.isDecoded())
