@@ -15,18 +15,18 @@
         android:id="@+id/choose_image_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Choose Image" />
+        android:layout_centerInParent="true"
+        android:text="Выбрать изображение" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="141dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/choose_image_button"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="-47dp"
         android:layout_toStartOf="@+id/choose_image_button"
-        android:text="Message - "
+        android:text="Сообщение - "
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -35,12 +35,12 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="144dp"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView"
         android:layout_below="@+id/message"
+        android:layout_alignStart="@+id/textView"
         android:layout_marginTop="35dp"
-        android:text="Secret Key - "
+        android:text="Ключ - "
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -56,7 +56,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="19dp"
         android:ems="10"
-        android:hint="Enter secret key"
+        android:hint="Введите ключ"
         android:inputType="textPassword"
         android:textSize="14sp" />
 
@@ -64,32 +64,38 @@
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/choose_image_button"
         android:layout_alignStart="@+id/secret_key"
-        android:layout_alignTop="@+id/textView"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Enter message"
+        android:hint="Введите сообщение"
         android:inputType="textPersonName"
         android:textSize="14sp" />
 
     <Button
         android:id="@+id/encode_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="17dp"
+        android:layout_marginEnd="-180dp"
+        android:layout_marginBottom="118dp"
         android:layout_toStartOf="@+id/secret_key"
-        android:text="Encode"
+        android:text="Спрятать текст"
         android:textAlignment="center"
         android:textSize="14dp" />
 
     <Button
         android:id="@+id/save_image_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/secret_key"
-        android:layout_alignTop="@+id/encode_button"
-        android:layout_marginEnd="36dp"
-        android:text="Save Image" />
+        android:layout_width="378dp"
+        android:layout_height="219dp"
+
+
+        android:layout_below="@+id/encode_button"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-101dp"
+        android:layout_marginEnd="2dp"
+        android:text="Сохранить изображение" />
 
     <TextView
         android:id="@+id/whether_encoded"

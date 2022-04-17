@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Choose Image" />
+        android:text="Выбрать изображение" />
 
     <TextView
         android:id="@+id/textView"
@@ -25,7 +25,7 @@
         android:layout_below="@+id/choose_image_button"
         android:layout_marginTop="45dp"
         android:layout_toStartOf="@+id/choose_image_button"
-        android:text="Secret Key -"
+        android:text="Ключ -"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -39,7 +39,7 @@
         android:layout_alignBaseline="@+id/message"
         android:layout_alignBottom="@+id/message"
         android:layout_alignStart="@+id/textView"
-        android:text="Message"
+        android:text="Текст"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
@@ -55,7 +55,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="18dp"
         android:ems="10"
-        android:hint="Enter secret key"
+        android:hint="Введите ключ"
         android:inputType="textPassword"
         android:textSize="14sp" />
 
@@ -67,17 +67,17 @@
         android:layout_alignStart="@+id/secret_key"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:hint="Your message"
+        android:hint="Ваше сообщение"
         android:inputType="textPersonName"
         android:textSize="14sp" />
 
     <Button
         android:id="@+id/decode_button"
-        android:layout_width="wrap_content"
+        android:layout_width="201dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Decode"
+        android:text="Получить текст"
         android:textAlignment="center"
         android:textSize="14dp" />
 

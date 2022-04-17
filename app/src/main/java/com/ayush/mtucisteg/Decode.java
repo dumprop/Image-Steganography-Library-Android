@@ -1,13 +1,17 @@
 package com.ayush.mtucisteg;
 
-import android.widget.*;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextDecodingCallback;
 import com.ayush.mtucisteglib.Text.ImageSteganography;
@@ -65,7 +69,7 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
                 original_image = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
                 imageView.setImageBitmap(original_image);
             } catch (Exception e) {
-                // обработка ошибки
+                Toast.makeText(getApplicationContext(), "Ошибка при чтении изображения!", Toast.LENGTH_LONG).show();
             }
         }
 

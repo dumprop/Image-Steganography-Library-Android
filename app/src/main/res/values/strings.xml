@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Steganography</string>
+    <string name="app_name">МТУСИ Стеганография</string>
+    <string name="text_is_hidden_in_image">Текст успешно спрятан в картинке!</string>
 </resources>

@@ -1,26 +1,37 @@
 package com.ayush.mtucisteg;
 
-import android.widget.*;
-import java.util.*;
 import android.Manifest;
-import java.io.*;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
-import android.support.v4.app.*;
-import android.support.v4.content.*;
-import android.support.v7.app.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextEncodingCallback;
 import com.ayush.mtucisteglib.Text.ImageSteganography;
 import com.ayush.mtucisteglib.Text.TextEncoding;
 
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Encode extends AppCompatActivity implements TextEncodingCallback {
@@ -116,7 +127,7 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
     public void onCompleteTextEncoding(ImageSteganography result) {
         if (result != null && result.isEncoded()) {
             encoded_image = result.getEncoded_image();
-            whether_encoded.setText("Encoded");
+            whether_encoded.setText(R.string.text_is_hidden_in_image);
             imageView.setImageBitmap(encoded_image);
         }
     }
@@ -124,19 +135,58 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
     private void saveToInternalStorage(Bitmap bitmapImage) {
         OutputStream fOut;
 
-        File filepath = Environment.getExternalStorageDirectory();
+        File filepath;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        {
+            filepath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/StegMTUCI");
 
-        File dir = new File(filepath.getAbsolutePath()
-                + "/StegMTUCI/");
-        dir.mkdirs();
-        File file = new File(dir, "HIDDEN.PNG" );
+        }
+        else
+        {
+            filepath = new File(Environment.getExternalStorageDirectory() + "/StegMTUCI" );
+        }
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), "Сохраняю в " + filepath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        try {
-            fOut = new FileOutputStream(file);
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-            fOut.close();
-            whether_encoded.post(() -> save.dismiss());
-        } catch (Exception e) {
+        if (filepath.exists())
+        {
+                File file = new File(filepath, "HIDDEN.PNG");
+                try {
+                    fOut = new FileOutputStream(file);
+                    bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                    fOut.close();
+                    whether_encoded.post(() -> save.dismiss());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplicationContext(), "Ошибка при сохранении картинки с сообщением внутри!", Toast.LENGTH_LONG).show());
+                }
+        } else {
+            boolean is_created_dir = filepath.mkdirs();
+            if (is_created_dir)
+            {
+                File file = new File(filepath, "HIDDEN.PNG");
+
+                try {
+                    fOut = new FileOutputStream(file);
+                    bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                    fOut.close();
+                    whether_encoded.post(() -> save.dismiss());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplicationContext(), "Ошибка при сохранении картинки с сообщением внутри!", Toast.LENGTH_LONG).show());
+                }
+            } else {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Ошибка создания папки в " + filepath.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         }
     }
 
@@ -145,15 +195,15 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int ReadPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         List<String> listPermissionsNeeded = new ArrayList<>();
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[0]), 1);
-        }
+
         if (ReadPermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
         if (permissionWriteStorage != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
+        if (!listPermissionsNeeded.isEmpty())
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[0]), 1);
 
     }
 
