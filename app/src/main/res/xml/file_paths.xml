@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-path name="steganography_images" path="Android/data/it.steganography/files/Pictures" />
+    <external-path
+        name="steganography_images"
+        path="Android/data/it.steganography/files/Pictures" />
 </paths>

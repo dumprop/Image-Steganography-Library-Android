@@ -1,6 +1,7 @@
 package com.ayush.mtucisteg;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -29,16 +32,16 @@ import com.ayush.mtucisteglib.Text.TextEncoding;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
-    private static final int SELECT_PICTURE = 100;
-
-    private TextView whether_encoded;
+    private TextView textView;
     private ImageView imageView;
     private EditText message;
     private EditText secret_key;
@@ -51,6 +54,21 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
 
     private Bitmap original_image;
+    ActivityResultLauncher<Intent> chooseImageForHidingActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    filepath = Objects.requireNonNull(data).getData();
+                    try {
+                        InputStream imageStream = getContentResolver().openInputStream(filepath);
+                        original_image = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                        imageView.setImageBitmap(original_image);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
     private Bitmap encoded_image;
 
     @Override
@@ -62,16 +80,16 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
         secret_key = findViewById(R.id.secret_key);
         imageView = findViewById(R.id.imageview);
         Button encode_button = findViewById(R.id.encode_button);
-        whether_encoded = findViewById(R.id.whether_encoded);
+        textView = findViewById(R.id.whether_encoded);
         message = findViewById(R.id.message);
         Button choose_image_button = findViewById(R.id.choose_image_button);
 
         checkAndRequestPermissions();
 
-        choose_image_button.setOnClickListener(view -> ImageChooser());
+        choose_image_button.setOnClickListener(view -> select_image_for_hiding());
 
         encode_button.setOnClickListener(view -> {
-            whether_encoded.setText("");
+            textView.setText("");
             if (filepath != null) {
                 if (message.getText() != null) {
                     imageSteganography = new ImageSteganography(message.getText().toString(),
@@ -97,95 +115,66 @@ public class Encode extends AppCompatActivity implements TextEncodingCallback {
 
     }
 
-    private void ImageChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Выбери изображение"), SELECT_PICTURE);
-    }
+    public void select_image_for_hiding() {
+        Intent int_choose_image = new Intent(Intent.ACTION_PICK);
+        int_choose_image.setType("image/*");
+        chooseImageForHidingActivityResultLauncher.launch(int_choose_image);
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            filepath = data.getData();
-            try {
-                original_image = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-                imageView.setImageBitmap(original_image);
-            } catch (IOException e) {
-                //обработка ошибок
-            }
-        }
     }
 
     @Override
     public void onStartTextEncoding() {
-        // обработка текст на начале
+        // обработка текст на начале (особенность TextEncodingCallback)
     }
 
     @Override
     public void onCompleteTextEncoding(ImageSteganography result) {
         if (result != null && result.isEncoded()) {
             encoded_image = result.getEncoded_image();
-            whether_encoded.setText(R.string.text_is_hidden_in_image);
+            textView.setText(R.string.text_is_hidden_in_image);
             imageView.setImageBitmap(encoded_image);
         }
     }
 
     private void saveToInternalStorage(Bitmap bitmapImage) {
-        OutputStream fOut;
+        OutputStream outputStream;
 
         File filepath;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             filepath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/StegMTUCI");
 
+        } else {
+            filepath = new File(Environment.getExternalStorageDirectory() + "/StegMTUCI");
         }
-        else
-        {
-            filepath = new File(Environment.getExternalStorageDirectory() + "/StegMTUCI" );
-        }
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), "Сохраняю в " + filepath.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplicationContext(), "Сохраняю в " + filepath.getAbsolutePath(), Toast.LENGTH_SHORT).show());
 
-        if (filepath.exists())
-        {
-                File file = new File(filepath, "HIDDEN.PNG");
-                try {
-                    fOut = new FileOutputStream(file);
-                    bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-                    fOut.close();
-                    whether_encoded.post(() -> save.dismiss());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplicationContext(), "Ошибка при сохранении картинки с сообщением внутри!", Toast.LENGTH_LONG).show());
-                }
+        if (filepath.exists()) {
+            File file = new File(filepath, "HIDDEN.PNG");
+            try {
+                outputStream = new FileOutputStream(file);
+                bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                outputStream.close();
+                textView.post(() -> save.dismiss());
+            } catch (Exception e) {
+                e.printStackTrace();
+                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplicationContext(), "Ошибка при сохранении картинки с сообщением внутри!", Toast.LENGTH_LONG).show());
+            }
         } else {
             boolean is_created_dir = filepath.mkdirs();
-            if (is_created_dir)
-            {
+            if (is_created_dir) {
                 File file = new File(filepath, "HIDDEN.PNG");
 
                 try {
-                    fOut = new FileOutputStream(file);
-                    bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-                    fOut.close();
-                    whether_encoded.post(() -> save.dismiss());
+                    outputStream = new FileOutputStream(file);
+                    bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                    outputStream.close();
+                    textView.post(() -> save.dismiss());
                 } catch (Exception e) {
                     e.printStackTrace();
                     new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplicationContext(), "Ошибка при сохранении картинки с сообщением внутри!", Toast.LENGTH_LONG).show());
                 }
             } else {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Ошибка создания папки в " + filepath.getAbsolutePath(), Toast.LENGTH_LONG).show();
-                    }
-                });
+                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getApplicationContext(), "Ошибка создания папки в " + filepath.getAbsolutePath(), Toast.LENGTH_LONG).show());
             }
         }
     }

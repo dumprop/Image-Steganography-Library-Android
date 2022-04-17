@@ -1,5 +1,6 @@
 package com.ayush.mtucisteg;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -9,17 +10,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextDecodingCallback;
 import com.ayush.mtucisteglib.Text.ImageSteganography;
 import com.ayush.mtucisteglib.Text.TextDecoding;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Objects;
+
 public class Decode extends AppCompatActivity implements TextDecodingCallback {
 
-    private static final int INTENT_FOR_CHOOSING_PICTURE = 100;
     // Создаём переменные для элементов интерфейса
     private TextView textView;
     private ImageView imageView;
@@ -27,6 +32,21 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
     private EditText secret_key;
     private Uri filepath;
     private Bitmap original_image;
+    ActivityResultLauncher<Intent> chooseImageForDecodingActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    filepath = Objects.requireNonNull(data).getData();
+                    try {
+                        InputStream imageStream = getContentResolver().openInputStream(filepath);
+                        original_image = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                        imageView.setImageBitmap(original_image);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +61,7 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
         message = findViewById(R.id.message);
         secret_key = findViewById(R.id.secret_key);
 
-        choose_image_button.setOnClickListener(view -> ImageChooser());
+        choose_image_button.setOnClickListener(view -> select_image_for_decoding());
 
         decode_button.setOnClickListener(view -> {
             if (null != filepath) {
@@ -53,31 +73,15 @@ public class Decode extends AppCompatActivity implements TextDecodingCallback {
         });
     }
 
-    private void ImageChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Выбери изображение"), INTENT_FOR_CHOOSING_PICTURE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == INTENT_FOR_CHOOSING_PICTURE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            filepath = data.getData();
-            try {
-                original_image = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-                imageView.setImageBitmap(original_image);
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Ошибка при чтении изображения!", Toast.LENGTH_LONG).show();
-            }
-        }
-
+    private void select_image_for_decoding() {
+        Intent int_choose_image = new Intent(Intent.ACTION_PICK);
+        int_choose_image.setType("image/*");
+        chooseImageForDecodingActivityResultLauncher.launch(int_choose_image);
     }
 
     @Override
     public void onStartTextEncoding() {
-        // обработка до шифрования текста
+        // обработка до шифрования текста (особенность TextEncodingCallback)
     }
 
     @Override
