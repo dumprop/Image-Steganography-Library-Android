@@ -1,4 +1,4 @@
-package com.ayush.mtucisteg;
+package ru.mtuci.steg;
 
 import static org.junit.Assert.assertEquals;
 

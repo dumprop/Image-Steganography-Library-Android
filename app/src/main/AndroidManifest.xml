@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ayush.mtucisteg">
+    package="ru.mtuci.steg">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,15 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.ayush.mtucisteg.MainActivity">
+        <activity android:name="ru.mtuci.steg.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.ayush.mtucisteg.Encode" />
-        <activity android:name="com.ayush.mtucisteg.Decode" />
+        <activity android:name="ru.mtuci.steg.Encode" />
+        <activity android:name="ru.mtuci.steg.Decode" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

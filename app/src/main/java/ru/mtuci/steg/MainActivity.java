@@ -1,4 +1,4 @@
-package com.ayush.mtucisteg;
+package ru.mtuci.steg;
 
 import android.content.Intent;
 import android.os.Bundle;

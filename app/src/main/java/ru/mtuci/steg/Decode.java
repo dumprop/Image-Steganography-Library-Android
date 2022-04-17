@@ -1,4 +1,4 @@
-package com.ayush.mtucisteg;
+package ru.mtuci.steg;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+
 
 import com.ayush.mtucisteglib.Text.AsyncTaskCallback.TextDecodingCallback;
 import com.ayush.mtucisteglib.Text.ImageSteganography;
